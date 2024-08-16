@@ -1,7 +1,11 @@
+// BeatPlayer.tsx
+
 import React from "react";
 import Image from "next/image";
+import AudioVisualizer from "./Audio/AudioVisualizer";
+import { Download, ThumbsDown, ThumbsUp } from "lucide-react";
 
-export default function BeatPlayer() {
+const BeatPlayer: React.FC = () => {
   return (
     <div className="flex justify-center items-center h-screen scroll-item">
       <div className="relative w-full max-w-sm h-full mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden">
@@ -22,12 +26,15 @@ export default function BeatPlayer() {
             />
           </div>
         </div>
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center space-y-4">
-          <button className="p-2 bg-gray-700 text-white rounded-full">
-            👍
+        <div className="absolute right-4 top-[50%] flex flex-col items-center space-y-4">
+          <button className="  text-white rounded-full">
+            <ThumbsUp size={32} />
           </button>
-          <button className="p-2 bg-gray-700 text-white rounded-full">
-            👎
+          <button className="  text-white rounded-full">
+            <ThumbsDown size={32} />
+          </button>
+          <button className="  text-white rounded-full">
+            <Download size={32} />
           </button>
         </div>
         <div className="absolute">
@@ -36,4 +43,6 @@ export default function BeatPlayer() {
       </div>
     </div>
   );
-}
+};
+
+export default BeatPlayer;

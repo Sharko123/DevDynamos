@@ -3,6 +3,8 @@ import BeatPlayer from "@/components/BeatPlayer";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 export default function BeatContainer() {
+  // Store the ref for the container so that we can get elements inside to
+  // Snap to the scroll
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,6 +25,7 @@ export default function BeatContainer() {
       });
     };
 
+    // Add the event listener so that we could snap the scroll
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
