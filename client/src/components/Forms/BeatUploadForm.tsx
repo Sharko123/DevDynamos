@@ -17,6 +17,8 @@ const UploadForm: React.FC = () => {
   };
 
   const handleGenreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // We check for the last value if that is a comma if it is then we append the
+    // Genre to the list of genres and make it display on the ui
     const value = event.target.value;
     if (value.endsWith(",")) {
       if (value.replaceAll(",", "").trim() != "") {
@@ -80,6 +82,16 @@ const UploadForm: React.FC = () => {
       <div className="mb-6">
         <label className="block text-gray-300 mb-2">Genres</label>
         <div className="flex flex-wrap gap-2 mb-2">
+          <input
+            type="text"
+            value={genreInput}
+            onChange={handleGenreChange}
+            onKeyDown={handleAddGenre}
+            className="border border-gray-600 rounded-md p-2 bg-gray-800 text-white"
+            placeholder="Press Enter to add genre"
+          />
+        </div>
+        <div className="flex flex-wrap gap-2">
           {genres.map((genre, index) => (
             <span
               key={index}
@@ -95,14 +107,6 @@ const UploadForm: React.FC = () => {
               </button>
             </span>
           ))}
-          <input
-            type="text"
-            value={genreInput}
-            onChange={handleGenreChange}
-            onKeyDown={handleAddGenre}
-            className="border border-gray-600 rounded-md p-2 bg-gray-800 text-white"
-            placeholder="Press Enter to add genre"
-          />
         </div>
       </div>
 
