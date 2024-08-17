@@ -32,6 +32,7 @@ body {
   }
   .scroll-container {
     scroll-snap-type: y mandatory;
+    scroll-snap-stop: always;
     overflow-y: scroll;
     height: 100vh;
   }

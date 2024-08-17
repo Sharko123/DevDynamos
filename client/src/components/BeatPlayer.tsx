@@ -2,30 +2,26 @@
 
 import React from "react";
 import Image from "next/image";
-import AudioVisualizer from "./Audio/AudioVisualizer";
 import { Download, ThumbsDown, ThumbsUp } from "lucide-react";
+import dynamic from "next/dynamic";
 
-const BeatPlayer: React.FC = () => {
+// Import it as an dynamic component because we don't need server side rendering
+const AudioVisualizer = dynamic(
+  () => import("@/components/Audio/AudioVisualizer"),
+  { ssr: false }
+);
+
+interface BeatPlayerProps {
+  beatId: string;
+  isActive: boolean;
+  src: string;
+}
+
+const BeatPlayer: React.FC<BeatPlayerProps> = ({ beatId, isActive, src }) => {
   return (
     <div className="flex justify-center items-center h-screen scroll-item">
       <div className="relative w-full max-w-sm h-full mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-        {
-          <Image
-            src="https://via.placeholder.com/1080x1920?text=Beat+Cover"
-            alt="Beat Cover"
-            className="w-full h-full object-cover"
-            width={1080}
-            height={1920}
-          />
-        }
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="p-4 text-center text-white">
-            <audio
-              id="beat-audio"
-              src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-            />
-          </div>
-        </div>
+        <AudioVisualizer src={src} playing={isActive} />
         <div className="absolute right-4 top-[50%] flex flex-col items-center space-y-4">
           <button className="  text-white rounded-full">
             <ThumbsUp size={32} />
