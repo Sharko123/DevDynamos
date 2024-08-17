@@ -17,13 +17,16 @@ const BeatGenerator: React.FC = () => {
   const handleGenerateBeat = async () => {
     if (!beatFile) return;
     setLoading(true);
+    const formData = new FormData();
+    formData.append('file', beatFile);
+    formData.append('drums', drums.toString());
+    formData.append('bass', bass.toString()); 
+    console.log('Selected file:', beatFile); 
 
     try {
       const response = await fetch("http://localhost:5000/generate-audio", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        body: formData,
       });
 
       if (response.ok) {

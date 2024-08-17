@@ -16,11 +16,14 @@ const CustomFileUpload: React.FC<CustomFileUploadProps> = ({
   onFileChange,
   fileTypes,
 }) => {
+  console.log('CustomFileUpload component rendered');
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 
   const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log('File input change triggered');
     const file = event.target.files?.[0] || null;
+    console.log('Selected file:', file); // Log selected file
     onFileChange(file);
   };
 
@@ -35,8 +38,11 @@ const CustomFileUpload: React.FC<CustomFileUploadProps> = ({
 
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    console.log('File drop triggered');
+
     setDragging(false);
     const file = event.dataTransfer.files?.[0] || null;
+    console.log('Dropped file:', file); // Log dropped file
     onFileChange(file);
   };
 
