@@ -1,16 +1,12 @@
 // import AudioVisualizer from "@/components/Audio/AudioVisualizer";
 import BeatContainer from "@/components/BeatContainer";
-import BeatPlayer from "@/components/BeatPlayer";
-import BeatGenerator from "@/components/BeatGenerator";
-import Image from "next/image";
-
-import dynamic from "next/dynamic";
+import Sidebar from "@/components/Sidebar";
 
 export default function Home() {
   return (
     <>
+      <Sidebar />
       <BeatContainer />
-      {/* <AudioVisualizer src={"/beat.mp3"} /> */}
     </>
   );
 }

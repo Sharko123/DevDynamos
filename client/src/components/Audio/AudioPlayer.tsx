@@ -48,17 +48,17 @@ const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({ src }) => {
     const audio = audioRef.current;
     if (audio) {
       audio.addEventListener("timeupdate", updateProgress);
-      audio.addEventListener("ended", setPause);
+      // audio.addEventListener("ended", setPause);
       return () => {
         audio.removeEventListener("timeupdate", updateProgress);
-        audio.removeEventListener("ended", setPause);
+        // audio.removeEventListener("ended", setPause);
       };
     }
   }, []);
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
-      <audio ref={audioRef} src={src} />
+      <audio ref={audioRef} src={src}></audio>
       <div className="flex items-center justify-between mb-2">
         <button
           onClick={togglePlayPause}

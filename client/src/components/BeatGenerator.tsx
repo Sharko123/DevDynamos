@@ -3,21 +3,26 @@ import React, { useState } from "react";
 import CustomAudioPlayer from "./Audio/AudioPlayer";
 import Button from "./ui/Button";
 import { generateNewBeat } from "@/lib/actions";
+import CustomFileUpload from "./ui/Fileupload";
 
 const BeatGenerator: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
+  const [drums, setDrums] = useState<boolean>(false);
+  const [bass, setBass] = useState<boolean>(true);
+  const [beatFile, setBeatFile] = useState<File | null>(null);
 
+  /// Send request to the server and wait while the server generates the output for the beat
   const handleGenerateBeat = async () => {
-    
+    if (!beatFile) return;
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/generate-audio', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/generate-audio", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -36,14 +41,44 @@ const BeatGenerator: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
+    <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md ">
       <h1 className="text-3xl font-bold text-white mb-6">Generate a Beat</h1>
 
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center gap-5">
         {!audioUrl && (
-          <Button onClick={handleGenerateBeat} disabled={loading}>
-            Generate Beat
-          </Button>
+          <>
+            {!beatFile ? (
+              <CustomFileUpload
+                onFileChange={setBeatFile}
+                fileTypes="audio/wav"
+              />
+            ) : (
+              <CustomAudioPlayer src={URL.createObjectURL(beatFile)} />
+            )}
+            <div className="w-full flex gap-3">
+              <input
+                type="checkbox"
+                checked={drums}
+                onChange={(e) => setDrums(e.target.checked)}
+              />
+              <label htmlFor="drums">Drums</label>
+            </div>
+            <div className="w-full flex gap-3">
+              <input
+                type="checkbox"
+                checked={bass}
+                onChange={(e) => setBass(e.target.checked)}
+              />
+              <label htmlFor="drums">Bass</label>
+            </div>
+            <Button
+              onClick={handleGenerateBeat}
+              disabled={loading}
+              className="w-full"
+            >
+              Generate Beat
+            </Button>
+          </>
         )}
         {loading && (
           <div className="mt-6 flex items-center justify-center">

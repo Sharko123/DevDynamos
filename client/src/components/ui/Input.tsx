@@ -1,14 +1,7 @@
 // components/TextInput.tsx
-import React from "react";
+import React, { InputHTMLAttributes } from "react";
 
-interface TextInputProps {
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  className?: string;
-}
+interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {}
 
 const TextInput: React.FC<TextInputProps> = ({
   value,
@@ -17,10 +10,11 @@ const TextInput: React.FC<TextInputProps> = ({
   placeholder = "",
   disabled = false,
   className = "",
+  ...props
 }) => {
   return (
     <input
-      type="text"
+      {...props}
       value={value}
       onChange={onChange}
       placeholder={placeholder}

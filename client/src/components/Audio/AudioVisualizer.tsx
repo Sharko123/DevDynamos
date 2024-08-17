@@ -91,7 +91,6 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
       const barWidth = 15;
       let barHeight;
       let x = 0;
-      // ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
       const animate = () => {
         if (!ctx) return;
         x = 0;

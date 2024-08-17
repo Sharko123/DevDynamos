@@ -1,11 +1,16 @@
 "use server";
-import api from "./api.ts";
+
+const BASE_URL = process.env.API_URL;
 
 export async function generateNewBeat() {
-    const beat = await api.post("/generate-audio");
+  const response = await fetch(BASE_URL + "generate-audio", {
+    method: "POST",
+  });
+  if (response.ok) {
     // Convert the response to a blob
     const blob = await response.blob();
     // Create a URL for the blob
-    const url = URL.createObjectURL(blob);
-    return url;
+    return blob;
+  }
+  throw Error("Response error");
 }
