@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface AudioVisualizerProps {
@@ -14,6 +15,8 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
   const [audioSource, setAudioSource] =
     useState<MediaElementAudioSourceNode | null>(null);
+  // We need this to remove playing if we navigate to other page
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -42,6 +45,16 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audio, audioCtx, audioSource, playing]);
+
+  useEffect(() => {
+    if (!pathname.includes("/beat/")) {
+      audio.pause();
+      if (audioSource) {
+        audioSource.disconnect();
+        audioCtx.suspend();
+      }
+    }
+  }, [audio, audioCtx, audioSource, pathname]);
 
   const draw = (
     bufferLength: number,
