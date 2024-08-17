@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface AudioVisualizerProps {
   src: string;
@@ -47,6 +47,7 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
   }, [audio, audioCtx, audioSource, playing]);
 
   useEffect(() => {
+    console.log(pathname);
     if (!pathname.includes("/beat/")) {
       audio.pause();
       if (audioSource) {
@@ -67,14 +68,17 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
     if (!ctx) return;
 
     for (let i = 0; i < bufferLength; i++) {
-      barHeight = dataArray[i] * 1.5;
+      // The data from the array
+      barHeight = dataArray[i];
       ctx.save();
       ctx.translate(canvasRef.current.width / 2, canvasRef.current.height / 2);
       ctx.rotate(i * bufferLength * 4);
+      // For blue and purple on the hsl color wheel
       ctx.fillStyle = `hsl(${210 + i * 2}, 100%, 50%)`;
       ctx.beginPath();
+      // Draw the rectangles
       ctx.fillRect(0, 0, barWidth, barHeight);
-      // ctx.arc(0, 0, barHeight, 0, Math.PI / 4);
+
       x += barWidth;
       ctx.restore();
     }
@@ -88,6 +92,8 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
       audioSource.disconnect();
       return;
     }
+    // Try to create he audio sournce and play the audio
+    // and run the visualizations
     try {
       const aS = audioCtx.createMediaElementSource(audio);
       setAudioSource(aS);
@@ -102,12 +108,14 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
       const canvasWidth = canvasRef.current.width;
       const canvasHeight = canvasRef.current.height;
       const barWidth = 15;
-      let barHeight;
       let x = 0;
+      // The main animate function which runs every draw call
       const animate = () => {
         if (!ctx) return;
         x = 0;
+        // Clear the screen with the color so previous frame drawings are overwritten
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        // Get the data from the analyzer
         analyzer.getByteFrequencyData(dataArray);
         draw(bufferLength, x, barWidth, 0, dataArray);
         requestAnimationFrame(animate);
@@ -116,14 +124,6 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
     } catch (e) {}
   };
 
-  return (
-    <>
-      <canvas
-        // onClick={initalizeVisualizer}
-        className="w-full h-full"
-        ref={canvasRef}
-      ></canvas>
-    </>
-  );
+  return <canvas className="w-full h-full" ref={canvasRef} />;
 };
 export default AudioVisualizer;
