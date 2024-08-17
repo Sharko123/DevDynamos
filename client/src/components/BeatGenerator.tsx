@@ -2,18 +2,23 @@
 import React, { useState } from "react";
 import CustomAudioPlayer from "./Audio/AudioPlayer";
 import Button from "./ui/Button";
+import { generateNewBeat } from "@/lib/actions";
 
 const BeatGenerator: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
 
-  const handleGenerateBeat = () => {
+  const handleGenerateBeat = async () => {
     setLoading(true);
-    // TODO: add api call
-    setTimeout(() => {
-      setAudioUrl("/beat.mp3");
+    try {
+      setAudioUrl(await generateNewBeat());
+    }catch (e) {
+      setError("Something went wrong");
+    } finally {
       setLoading(false);
-    }, 2000); // Simulate a 2-second loading time
+
+    }
   };
 
   return (
