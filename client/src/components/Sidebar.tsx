@@ -15,7 +15,7 @@ const Sidebar: React.FC = () => {
         <SidebarItem icon={<Home />} label="Feed" href="/" />
         <SidebarItem icon={<Upload />} label="Upload" href="/beats/upload" />
         <SidebarItem icon={<Plus />} label="Generate" href="/beats/generate" />
-        <SidebarItem icon={<User />} label="Account" href="/signup" />
+        <SidebarItem icon={<User />} label="Account" href="/account" />
       </div>
     </div>
   );
