@@ -10,14 +10,28 @@ const BeatGenerator: React.FC = () => {
   const [error, setError] = useState<string>("");
 
   const handleGenerateBeat = async () => {
+    
     setLoading(true);
+
     try {
-      setAudioUrl(await generateNewBeat());
-    }catch (e) {
-      setError("Something went wrong");
+      const response = await fetch('http://localhost:5000/generate-audio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+      } else {
+        console.error("Failed to generate beat:", await response.json());
+      }
+    } catch (error) {
+      console.error("Error generating beat:", error);
     } finally {
       setLoading(false);
-
     }
   };
 

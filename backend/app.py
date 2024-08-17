@@ -12,8 +12,8 @@ def get_data():
 @app.route('/generate-audio', methods=['POST'])
 def generate_audio():
     try:
-        # Simulate audio generation by sending a dummy file
-        audio_file_path = 'track_1.wav'  # Path to your dummy audio file
+        # Simulate audio generation by sending a test file
+        audio_file_path = 'track_1.wav'  # Path to test file
         
         if os.path.exists(audio_file_path):
             return send_file(audio_file_path, as_attachment=True, mimetype='audio/mpeg')
