@@ -8,11 +8,8 @@ import sys
 
 
 # Add the path to AI-Beat-Maker-master to PYTHONPATH
-sys.path.append(r'C:\Users\death\Downloads\AI-Beat-Maker-master\AI-Beat-Maker-master')
-print("Current sys.path:")
-for path in sys.path:
-    print(path)
-from main import main  # Adjust the import path as necessary
+
+from BeatGen.BeatGen import main  # Adjust the import path as necessary
 
 app = Flask(__name__)
 # CORS(app, resources={r"/*": {"origins": "*"}})
@@ -69,7 +66,7 @@ def generate_audio():
             drums = request.form.get('drums') == 'true'
             bass = request.form.get('bass') == 'true'
             # Call the `main` function to generate the beat
-            main(input_audio_path, drums, bass, 8, output_audio_path)  # Adjust parameters as needed
+            main.main(input_audio_path, drums, bass, 8, output_audio_path)  # Adjust parameters as needed
 
             if os.path.exists(output_audio_path):
                 return send_file(output_audio_path, as_attachment=True, mimetype='audio/mpeg')
