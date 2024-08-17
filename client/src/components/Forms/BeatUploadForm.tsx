@@ -1,5 +1,15 @@
 "use client";
 import React, { useState } from "react";
+import Button from "../ui/Button";
+import CustomAudioPlayer from "../Audio/AudioPlayer";
+import CustomFileUpload from "../ui/Fileupload";
+import TextInput from "../ui/Input";
+
+// This form has 3 inputs the first one if for the file upload of the beat file
+// It only accepts the audio filetypes
+// Then there is an input for the title
+// And there is an tag based input which is like you enter comma separated values
+// and it adds them to a list which can be then submitted to the backend server
 
 const UploadForm: React.FC = () => {
   const [beatFile, setBeatFile] = useState<File | null>(null);
@@ -7,8 +17,11 @@ const UploadForm: React.FC = () => {
   const [genres, setGenres] = useState<string[]>([]);
   const [genreInput, setGenreInput] = useState("");
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // Events for inputs
+  const handleFileChange = (file: File | null) => {
+    // const file = event.target.files?.[0] || null;
     setBeatFile(file);
   };
 
@@ -31,6 +44,7 @@ const UploadForm: React.FC = () => {
     }
     setGenreInput(event.target.value);
   };
+  // End events
 
   const handleAddGenre = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && genreInput.trim() !== "") {
@@ -43,52 +57,66 @@ const UploadForm: React.FC = () => {
     setGenres(genres.filter((_, i) => i !== index));
   };
 
+  const handleFormSubmit = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000); // This is temporary and will be replaced by the api
+  };
+
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold text-white mb-6">Upload Your Beat</h1>
 
       <div className="mb-6">
         <label className="block text-gray-300 mb-2">Beat File</label>
-        <input
-          type="file"
-          accept="audio/*"
-          onChange={handleFileChange}
-          className="border border-gray-600 rounded-md w-full p-2 bg-gray-800 text-white"
-        />
+        {!beatFile && (
+          <CustomFileUpload
+            onFileChange={handleFileChange}
+            fileTypes="audio/*"
+          />
+        )}
         {beatFile && (
-          <div className="mt-4">
-            <audio controls className="w-full bg-gray-800 rounded-md">
-              <source
-                src={URL.createObjectURL(beatFile)}
-                type={beatFile.type}
-              />
-              Your browser does not support the audio element.
-            </audio>
-          </div>
+          <>
+            <div className="flex justify-between w-full">
+              <span>{beatFile.name}</span>
+              <button
+                type="button"
+                onClick={() => setBeatFile(null)}
+                className="ml-2 text-red-400 text-lg"
+                disabled={loading}
+              >
+                &times;
+              </button>
+            </div>
+            <div className="mt-4">
+              <CustomAudioPlayer src={URL.createObjectURL(beatFile)} />
+            </div>
+          </>
         )}
       </div>
 
       <div className="mb-6">
         <label className="block text-gray-300 mb-2">Title</label>
-        <input
-          type="text"
+        <TextInput
           value={title}
           onChange={handleTitleChange}
           className="border border-gray-600 rounded-md w-full p-2 bg-gray-800 text-white"
           placeholder="Enter beat title"
+          disabled={loading}
         />
       </div>
 
       <div className="mb-6">
         <label className="block text-gray-300 mb-2">Genres</label>
         <div className="flex flex-wrap gap-2 mb-2">
-          <input
-            type="text"
+          <TextInput
             value={genreInput}
             onChange={handleGenreChange}
             onKeyDown={handleAddGenre}
             className="border border-gray-600 rounded-md p-2 bg-gray-800 text-white"
             placeholder="Press Enter to add genre"
+            disabled={loading}
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -102,6 +130,7 @@ const UploadForm: React.FC = () => {
                 type="button"
                 onClick={() => handleRemoveGenre(index)}
                 className="ml-2 text-red-400"
+                disabled={loading}
               >
                 &times;
               </button>
@@ -110,9 +139,9 @@ const UploadForm: React.FC = () => {
         </div>
       </div>
 
-      <button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-md shadow-lg">
+      <Button onClick={handleFormSubmit} loading={loading}>
         Upload Beat
-      </button>
+      </Button>
     </div>
   );
 };
