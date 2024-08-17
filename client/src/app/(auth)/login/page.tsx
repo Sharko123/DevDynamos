@@ -1,4 +1,3 @@
-// pages/login.tsx
 "use client";
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
@@ -8,28 +7,45 @@ import TextInput from "@/components/ui/Input";
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = (formData: FormData) => {
-    // The form data containes the data from the form which will have the following entries
-    // - email
-    // - password
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent the default form submission behavior
 
-    // disable the form
     setLoading(true);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    console.log(email, password);
+    setError(null);
 
-    setTimeout(() => {
+    const formData = new FormData(event.currentTarget);
+
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login successful:", data);
+        // Redirect using window.location to avoid router issues
+        window.location.href = "/";
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Login failed");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setError("An unexpected error occurred");
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 flex items-center justify-center">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold text-white mb-6">Login</h1>
-        <form action={handleLogin}>
+        <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-300 mb-2">
               Email
