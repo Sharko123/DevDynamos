@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Download, ThumbsDown, ThumbsUp } from "lucide-react";
 import dynamic from "next/dynamic";
+import ReactionButtons from "./Reactions";
 
 // Import it as an dynamic component because we don't need server side rendering
 const AudioVisualizer = dynamic(
@@ -16,31 +17,12 @@ interface BeatPlayerProps {
 }
 // This file performs 3 functions liking/disliking, downloading, and playing the actual beat
 const BeatPlayer: React.FC<BeatPlayerProps> = ({ beatId, isActive, src }) => {
-  const [liked, setLiked] = useState<boolean>(false);
-  const [disliked, setDisLiked] = useState<boolean>(false);
   return (
     <div className="flex justify-center items-center h-screen scroll-item">
       <div className="relative w-full max-w-sm h-full mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <AudioVisualizer src={src} playing={isActive} />
         <div className="absolute right-4 top-[50%] flex flex-col items-center space-y-6">
-          <button
-            className="text-blue rounded-full"
-            onClick={() => {
-              if (disliked) setDisLiked(false);
-              setLiked(!liked);
-            }}
-          >
-            <ThumbsUp size={32} fill={liked ? "white" : "transparent"} />
-          </button>
-          <button
-            onClick={() => {
-              if (liked) setLiked(false);
-              setDisLiked(!disliked);
-            }}
-            className="  text-white rounded-full"
-          >
-            <ThumbsDown size={32} fill={disliked ? "white" : "transparent"} />
-          </button>
+          <ReactionButtons beatId={beatId} />
           <button className="  text-white rounded-full">
             <a href={src} download>
               <Download size={32} />

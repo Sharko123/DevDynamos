@@ -28,7 +28,8 @@ def login():
         return jsonify({"message": "Login failed"}), 401
 
     # If login is successful, create a response object
-    response = make_response(jsonify({"message": "Login successful"}), 200)
+    response = make_response(jsonify(
+        {"userId": user.id, "email": user.email, "username": user.username}), 200)
 
     # Set a cookie with the user's ID or some session token
     expires = datetime.datetime.now() + datetime.timedelta(days=7)

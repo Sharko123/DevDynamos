@@ -3,11 +3,15 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Button from "@/components/ui/Button";
 import TextInput from "@/components/ui/Input";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { setAuthData } = useAuth();
+  const router = useRouter();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -28,7 +32,8 @@ const LoginPage: React.FC = () => {
         const data = await response.json();
         console.log("Login successful:", data);
         // Redirect using window.location to avoid router issues
-        window.location.href = "/";
+        setAuthData(data.userId, data.username, data.email);
+        router.replace("/");
       } else {
         const errorData = await response.json();
         setError(errorData.error || "Login failed");

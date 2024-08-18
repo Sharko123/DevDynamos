@@ -9,7 +9,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className="fixed left-0 top-0 h-full w-64  text-white shadow-lg">
       <div className="flex items-center justify-center h-16 bg-gray-800">
-        <h1 className="text-xl font-bold">BeatApp</h1>
+        <h1 className="text-xl font-bold">BeatTok</h1>
       </div>
       <div className="mt-8 space-y-4">
         <SidebarItem icon={<Home />} label="Feed" href="/" />

@@ -29,7 +29,7 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
   }, []);
 
   useEffect(() => {
-    if (!playing) {
+    if (!playing || !pathname.includes("/beat/")) {
       audio.pause();
       if (audioSource) {
         audioSource.disconnect();
@@ -44,18 +44,7 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
       audioSource?.connect(analyzer as AnalyserNode);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audio, audioCtx, audioSource, playing]);
-
-  useEffect(() => {
-    console.log(pathname);
-    if (!pathname.includes("/beat/")) {
-      audio.pause();
-      if (audioSource) {
-        audioSource.disconnect();
-        audioCtx.suspend();
-      }
-    }
-  }, [audio, audioCtx, audioSource, pathname]);
+  }, [audio, audioCtx, audioSource, playing, pathname]);
 
   const draw = (
     bufferLength: number,
@@ -121,6 +110,8 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ src, playing }) => {
         requestAnimationFrame(animate);
       };
       animate();
+      // If this fails there's nothing much we can do
+      // THe audio will start playing anyways
     } catch (e) {}
   };
 

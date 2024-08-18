@@ -4,6 +4,7 @@ from app.utils.database import db, migrate
 from app.routes.auth_routes import auth_bp
 from app.routes.beat_routes import beat_bp
 from app.routes.generate_routes import generate_bp
+from app.routes.reaction_routes import reaction_bp
 
 
 def create_app():
@@ -20,8 +21,10 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    # Register all the routes
     app.register_blueprint(auth_bp)
     app.register_blueprint(beat_bp)
     app.register_blueprint(generate_bp)
+    app.register_blueprint(reaction_bp)
 
     return app
