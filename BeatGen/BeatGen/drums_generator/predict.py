@@ -7,15 +7,25 @@ from keras.layers import Dropout
 from keras.layers import LSTM
 from keras.layers import Activation
 import numpy as np
+import os
 
 
 import tensorflow as tf
 def generate(tempo=120, length=2000):
     """ Generates the midi file """
-    #load the notes used to train the model
-    with open('C:/Users/death/Downloads/AI-Beat-Maker-master/AI-Beat-Maker-master/drums_generator/data/notes', 'rb') as filepath:
-        notes = pickle.load(filepath)
 
+    # Determine the directory of the current script (predict.py)
+    script_dir = os.path.dirname(__file__)
+
+    # Construct the path to the 'notes' file
+    file_path = os.path.join(script_dir, 'data', 'notes')
+    #load the notes used to train the model
+    # Load the file
+    try:
+        with open(file_path, 'rb') as filepath:
+            notes = pickle.load(filepath)
+    except FileNotFoundError as e:
+        print(f'Error: {e}')
     # Get all pitch names
     pitchnames = sorted(set(item for item in notes))
     # Get all pitch names
@@ -73,8 +83,12 @@ def create_network(network_input, n_vocab):
     model.add(Dense(n_vocab))
     model.add(Activation('softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam')
+    # Determine the directory of the current script (predict.py)
+    script_dir = os.path.dirname(__file__)
 
-    model.load_weights('C:/Users/death/Downloads/AI-Beat-Maker-master/AI-Beat-Maker-master/drums_generator/weights/weights-improvement-100-0.3411-bigger.hdf5')
+    # Construct the path to the weights file
+    weights_path = os.path.join(script_dir, 'weights', 'weights-improvement-100-0.3411-bigger.hdf5')
+    model.load_weights(weights_path)
 
     return model
 

@@ -36,8 +36,10 @@ const BeatGenerator: React.FC = () => {
         mode: 'cors',
       });
 
-      if (response.ok) {
+      if (response.ok) { 
+        console.log("HIHIISHHIII")
         const blob = await response.blob();
+        console.log("HIHIISHHIII")
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
       } else {

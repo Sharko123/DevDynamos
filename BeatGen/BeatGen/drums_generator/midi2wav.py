@@ -1,5 +1,6 @@
 import ctypes.util
 from midi2audio import FluidSynth
+import os
 
 orig_ctypes_util_find_library = ctypes.util.find_library
 
@@ -14,5 +15,10 @@ ctypes.util.find_library = proxy_find_library
 
 
 def convert_midi_to_wav(midi_path, output_path, sound_font=None):
-    fs = FluidSynth('C:/Users/death/Downloads/AI-Beat-Maker-master/AI-Beat-Maker-master/drums_generator/808.sf2')
+    # Get the directory of the current script (predict.py)
+    script_dir = os.path.dirname(__file__)
+
+    # Construct the path to the SoundFont file
+    soundfont_path = os.path.join(script_dir, '808.sf2')
+    fs = FluidSynth(soundfont_path)
     fs.midi_to_audio(midi_path, output_path)

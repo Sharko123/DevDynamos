@@ -4,7 +4,12 @@ from flask_login import LoginManager, login_user, UserMixin
 from flask_cors import CORS
 import os
 import sys
-
+import os
+import click
+import librosa
+import numpy as np
+import utils
+import soundfile as sf
 
 
 # Add the path to AI-Beat-Maker-master to PYTHONPATH
@@ -62,10 +67,12 @@ def generate_audio():
             # Retrieve boolean parameters from form data
             drums = request.form.get('drums') == 'true'
             bass = request.form.get('bass') == 'true'
+            print(input_audio_path)
             # Call the `main` function to generate the beat
-            main.main(input_audio_path, drums, bass, 8, output_audio_path)  # Adjust parameters as needed
-
+            main(input_audio_path, drums, bass, 8, output_audio_path)  # Adjust parameters as needed
+            print("finished generating")
             if os.path.exists(output_audio_path):
+                print("GOT FILE")
                 return send_file(output_audio_path, as_attachment=True, mimetype='audio/mpeg')
             else:
                 return jsonify({'error': 'Generated audio file not found'}), 500

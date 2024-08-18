@@ -2,7 +2,7 @@ import os
 import click
 import librosa
 import numpy as np
-import utils
+import utilities
 from drums_generator import predict
 from methods import beat_tracking
 from methods.bass_generator import generate_bass
@@ -14,8 +14,8 @@ import soundfile as sf
 
 def beat_maker(track_name, drums, bass, k):
     # audio processing
-    audio_path = "C:/Users/death/Downloads/AI-Beat-Maker-master/AI-Beat-Maker-master/samples/{}.wav".format(track_name)
-    audio_data, samp_rate = utils.get_wav_data(audio_path)
+    audio_path = "{}".format(track_name)
+    audio_data, samp_rate = utilities.get_wav_data(audio_path)
     audio_data, index = librosa.effects.trim(audio_data)
 
     # apply clustering and splitting the track into k-clusters
@@ -48,10 +48,10 @@ def beat_maker(track_name, drums, bass, k):
         chords = chord_rec(remix, samp_rate)
         midi_bass = generate_bass(chords, tempo, chord_times)
         print(midi_bass)
-        midi_bass.save('C:/Users/death/Downloads/AI-Beat-Maker-master/AI-Beat-Maker-master/latest_bass.mid')
-        convert_midi_to_wav('C:/Users/death/Downloads/AI-Beat-Maker-master/AI-Beat-Maker-master/latest_bass.mid', 'C:/Users/death/Downloads/AI-Beat-Maker-master/AI-Beat-Maker-master/latest_bass.wav')
+        midi_bass.save('latest_bass.mid')
+        convert_midi_to_wav('latest_bass.mid', 'latest_bass.wav')
 
-        bass_wav_data, _ = utils.get_wav_data('C:/Users/death/Downloads/AI-Beat-Maker-master/AI-Beat-Maker-master/latest_bass.wav')
+        bass_wav_data, _ = utilities.get_wav_data('latest_bass.wav')
         print("BASS", bass_wav_data.shape)
         print(bass_wav_data)
         bass_wav_data = (librosa.util.normalize(bass_wav_data))
@@ -63,11 +63,11 @@ def beat_maker(track_name, drums, bass, k):
 
     # drums generation into midi file and converting the midi to wav file
     if drums:
-        midi_drums = generate(tempo=tempo)
+        midi_drums = predict.generate(tempo=tempo)
         midi_drums.save('latest_drums.mid')
         convert_midi_to_wav('latest_drums.mid', 'latest_drums.wav')
 
-        drums_wav_data, _ = utils.get_wav_data('latest_drums.wav')
+        drums_wav_data, _ = utilities.get_wav_data('latest_drums.wav')
         drums_wav_data = (librosa.util.normalize(drums_wav_data)) * 2
 
     else:
@@ -93,4 +93,5 @@ def beat_maker(track_name, drums, bass, k):
 
 def main(track, drums, bass, k, output_audio_path):
     final_res, samp_rate = beat_maker(track, drums, bass, k)
-    sf.write(f'/{output_audio_path}.wav', final_res, samp_rate)
+    print("DONE WITH THIS YYAYYAYA~!!!!")
+    sf.write(f'{output_audio_path}', final_res, samp_rate)
