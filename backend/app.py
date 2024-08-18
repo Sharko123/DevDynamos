@@ -8,14 +8,14 @@ import os
 import click
 import librosa
 import numpy as np
-import utils
 import soundfile as sf
 
 
 # Add the path to AI-Beat-Maker-master to PYTHONPATH
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BeatGen', 'BeatGen')))
-
+sys.path.append(os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'BeatGen', 'BeatGen')))
 from main import main  # Adjust the import path as necessary
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -38,9 +38,9 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # def login():
 #     username = request.form.get('email')
 #     password = request.form.get('password')
-    
+
 #     user = Users.query.filter_by(username=username).first()
-    
+
 #     if user and user.password == password:
 #         login_user(user)
 #         return jsonify({"message": "Login successful"}), 200
@@ -51,8 +51,8 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 @app.route('/generate-audio', methods=["POST", "GET"])
 def generate_audio():
     try:
-        #check if file is found
-        print(request.files) 
+        # check if file is found
+        print(request.files)
         if 'file' not in request.files:
             return jsonify({'error': 'No file part'}), 400
 
@@ -69,7 +69,8 @@ def generate_audio():
             bass = request.form.get('bass') == 'true'
             print(input_audio_path)
             # Call the `main` function to generate the beat
-            main(input_audio_path, drums, bass, 8, output_audio_path)  # Adjust parameters as needed
+            # Adjust parameters as needed
+            main(input_audio_path, drums, bass, 8, output_audio_path)
             print("finished generating")
             if os.path.exists(output_audio_path):
                 print("GOT FILE")
