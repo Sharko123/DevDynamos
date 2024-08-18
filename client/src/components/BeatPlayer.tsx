@@ -14,6 +14,7 @@ interface BeatPlayerProps {
   isActive: boolean;
   src: string;
 }
+console.log("ER:LKJA:LFKJ:DKLGHSL:ADKJF")
 // This file performs 3 functions liking/disliking, downloading, and playing the actual beat
 const BeatPlayer: React.FC<BeatPlayerProps> = ({ beatId, isActive, src }) => {
   return (
@@ -21,7 +22,7 @@ const BeatPlayer: React.FC<BeatPlayerProps> = ({ beatId, isActive, src }) => {
       <div className="relative w-full max-w-sm h-full mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <AudioVisualizer src={src} playing={isActive} />
         <div className="absolute right-4 top-[50%] flex flex-col items-center space-y-6">
-          <button className="  text-white rounded-full">
+          <button className="  text-blue rounded-full">
             <ThumbsUp size={32} />
           </button>
           <button className="  text-white rounded-full">

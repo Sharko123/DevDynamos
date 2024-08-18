@@ -8,11 +8,12 @@ import sys
 
 
 # Add the path to AI-Beat-Maker-master to PYTHONPATH
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BeatGen', 'BeatGen')))
 
-from BeatGen.BeatGen import main  # Adjust the import path as necessary
+from main import main  # Adjust the import path as necessary
 
 app = Flask(__name__)
-# CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 # app.config["SECRET_KEY"] = "ADMIN"
 # db = SQLAlchemy(app)
@@ -40,13 +41,9 @@ app = Flask(__name__)
 #         return jsonify({"message": "Login successful"}), 200
 #     else:
 #         return jsonify({"error": "Invalid username or password"}), 401
-CORS(app)  # Initialize CORS for the entire app
 
-@app.route("/", methods=["GET"])
-def home():
-    return jsonify({"message": "Welcome Home"})
 
-@app.route('/generate-audio', methods=['POST'])
+@app.route('/generate-audio', methods=["POST", "GET"])
 def generate_audio():
     try:
         #check if file is found

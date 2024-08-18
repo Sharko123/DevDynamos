@@ -15,18 +15,28 @@ const BeatGenerator: React.FC = () => {
 
   /// Send request to the server and wait while the server generates the output for the beat
   const handleGenerateBeat = async () => {
-    if (!beatFile) return;
+    if (!beatFile) {
+      console.log("HI")
+      return;
+    }
     setLoading(true);
     const formData = new FormData();
     formData.append('file', beatFile);
     formData.append('drums', drums.toString());
     formData.append('bass', bass.toString()); 
     console.log('Selected file:', beatFile); 
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
 
     try {
       const response = await fetch("http://localhost:5000/generate-audio", {
         method: "POST",
         body: formData,
+        mode: 'cors',
+        headers: {
+          'content-type': 'application/json'
+        },
       });
 
       if (response.ok) {
@@ -42,7 +52,7 @@ const BeatGenerator: React.FC = () => {
       setLoading(false);
     }
   };
-
+  console.log(beatFile)
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md ">
       <h1 className="text-3xl font-bold text-white mb-6">Generate a Beat</h1>
