@@ -4,31 +4,46 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import TextInput from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
 
 const SignupPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleSignup = (formData: FormData) => {
-    // The form data containes the data from the form which will have the following entries
-    // - name
-    // - email
-    // - password
-    // - confirm password
+  const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent the default form submission behavior
 
-    // disable the form
     setLoading(true);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const username = formData.get("username") as string;
-    const confirmpassword = formData.get("confirmpassword") as string;
-    if (password != confirmpassword) return setError("Password mismatch");
+    setError("");
 
-    setTimeout(() => {
+    const formData = new FormData(event.currentTarget);
+    const password = formData.get("password") as string;
+    const cPass = formData.get("confirmpassword") as string;
+    if (password != cPass) return setError("Password do not match");
+
+    try {
+      const response = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login successful:", data);
+        router.push("/login");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Login failed");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setError("An unexpected error occurred");
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -36,7 +51,7 @@ const SignupPage: React.FC = () => {
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold text-white mb-6">Sign Up</h1>
         {error && <span className="text-lg text-red-500">{error}</span>}
-        <form action={handleSignup}>
+        <form onSubmit={handleSignup}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-300 mb-2">
               Email

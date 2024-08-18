@@ -16,30 +16,28 @@ const BeatGenerator: React.FC = () => {
   /// Send request to the server and wait while the server generates the output for the beat
   const handleGenerateBeat = async () => {
     if (!beatFile) {
-      console.log("HI")
+      console.log("HI");
       return;
     }
     setLoading(true);
     const formData = new FormData();
-    formData.append('file', beatFile);
-    formData.append('drums', drums.toString());
-    formData.append('bass', bass.toString()); 
-    console.log('Selected file:', beatFile); 
+    formData.append("file", beatFile);
+    formData.append("drums", drums.toString());
+    formData.append("bass", bass.toString());
+    console.log("Selected file:", beatFile);
     for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
+      console.log(pair[0] + ": " + pair[1]);
     }
 
     try {
       const response = await fetch("http://localhost:5000/generate-audio", {
         method: "POST",
         body: formData,
-        mode: 'cors',
+        mode: "cors",
       });
 
-      if (response.ok) { 
-        console.log("HIHIISHHIII")
+      if (response.ok) {
         const blob = await response.blob();
-        console.log("HIHIISHHIII")
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
       } else {
@@ -51,7 +49,7 @@ const BeatGenerator: React.FC = () => {
       setLoading(false);
     }
   };
-  console.log(beatFile)
+  console.log(beatFile);
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md ">
       <h1 className="text-3xl font-bold text-white mb-6">Generate a Beat</h1>
@@ -104,9 +102,11 @@ const BeatGenerator: React.FC = () => {
               <CustomAudioPlayer src={audioUrl} />
             </div>
             <div className="flex gap-2 mt-3 w-full">
-              <Button>Upload</Button>
-              <Button>Generate other</Button>
-              <Button>Cancel</Button>
+              <Button>
+                <a href={audioUrl} download>
+                  Download
+                </a>
+              </Button>
             </div>
           </>
         )}

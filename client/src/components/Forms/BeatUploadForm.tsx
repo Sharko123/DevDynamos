@@ -16,6 +16,7 @@ const UploadForm: React.FC = () => {
   const [title, setTitle] = useState("");
   const [genres, setGenres] = useState<string[]>([]);
   const [genreInput, setGenreInput] = useState("");
+  const [error, setError] = useState("");
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -57,17 +58,38 @@ const UploadForm: React.FC = () => {
     setGenres(genres.filter((_, i) => i !== index));
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
+    if (!beatFile || !title) {
+      alert("Please upload a beat file and enter a title.");
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000); // This is temporary and will be replaced by the api
+
+    const formData = new FormData();
+    formData.append("file", beatFile);
+    formData.append("name", title);
+    formData.append("genres", JSON.stringify(genres));
+
+    const response = await fetch("http://localhost:5000/upload-beat", {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
+    if (response.ok) {
+      window.location.href = "/";
+    } else {
+      const errorData = await response.json();
+      setError(errorData.error || "Upload failed");
+    }
+
+    setLoading(false);
   };
 
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold text-white mb-6">Upload Your Beat</h1>
-
+      {error && <span className="text-lg text-red-500">{error}</span>}
       <div className="mb-6">
         <label className="block text-gray-300 mb-2">Beat File</label>
         {!beatFile && (

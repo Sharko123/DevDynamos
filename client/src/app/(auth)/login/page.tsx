@@ -16,10 +16,11 @@ const LoginPage: React.FC = () => {
     setError(null);
 
     const formData = new FormData(event.currentTarget);
+    console.log(formData);
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
         body: formData,
       });
 
@@ -40,11 +41,11 @@ const LoginPage: React.FC = () => {
     }
   };
 
-
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 flex items-center justify-center">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold text-white mb-6">Login</h1>
+        {error && <span className="text-lg text-red-500">{error}</span>}
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-300 mb-2">
@@ -53,6 +54,7 @@ const LoginPage: React.FC = () => {
             <TextInput
               type="email"
               id="email"
+              name="email"
               placeholder="Enter your email"
               className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-md"
               disabled={loading}
@@ -68,6 +70,7 @@ const LoginPage: React.FC = () => {
               placeholder="Enter your password"
               className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-md"
               disabled={loading}
+              name="password"
             />
             <button
               type="button"
