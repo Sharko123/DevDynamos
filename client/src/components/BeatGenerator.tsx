@@ -34,9 +34,6 @@ const BeatGenerator: React.FC = () => {
         method: "POST",
         body: formData,
         mode: 'cors',
-        headers: {
-          'content-type': 'application/json'
-        },
       });
 
       if (response.ok) {
